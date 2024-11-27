@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { Container, Typography, Box, Grid, Card, CardContent, Paper, Button } from "@mui/material";
-import { Line } from "react-chartjs-2";
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from "chart.js";
-import StockPitch from "./StockPitch"; // Import the StockPitch component
+import React, { useEffect, useState, useRef } from 'react';
+import { useParams } from 'react-router-dom';
+import { Container, Typography, Box, Grid, Card, CardContent, CircularProgress } from '@mui/material';
+import { Line } from 'react-chartjs-2';
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+import StockPitch from './StockPitch'; // Import the StockPitch component
 
 // Register Chart.js components
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
@@ -14,6 +14,7 @@ const StockPage: React.FC = () => {
   const [historicalData, setHistoricalData] = useState<any[]>([]);
   const [news, setNews] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const chartRef = useRef<any>(null); // Ref to access the chart
 
   const apiKey = process.env.REACT_APP_FINNHUB_API_KEY;
 
@@ -22,7 +23,7 @@ const StockPage: React.FC = () => {
     const dates = Array.from({ length: 30 }, (_, i) => {
       const date = new Date();
       date.setDate(today.getDate() - i);
-      return date.toISOString().split("T")[0];
+      return date.toISOString().split('T')[0];
     });
 
     const dataPromises = dates.map(async (date) => {
@@ -62,14 +63,14 @@ const StockPage: React.FC = () => {
 
         setStockData({
           ...stockJson,
-          pe: financialsJson.metric.peBasicExclExtraTTM || "N/A",
-          dividendYield: financialsJson.metric.dividendYieldIndicatedAnnual || "N/A",
-          marketCap: financialsJson.metric.marketCapitalization || "N/A",
+          pe: financialsJson.metric.peBasicExclExtraTTM || 'N/A',
+          dividendYield: financialsJson.metric.dividendYieldIndicatedAnnual || 'N/A',
+          marketCap: financialsJson.metric.marketCapitalization || 'N/A',
         });
         setHistoricalData(historicalDataJson);
         setNews(newsJson);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error('Error fetching data:', error);
       } finally {
         setLoading(false);
       }
@@ -82,9 +83,9 @@ const StockPage: React.FC = () => {
     labels: historicalData.map((entry) => entry.date),
     datasets: [
       {
-        label: "Closing Price (USD)",
+        label: 'Closing Price (USD)',
         data: historicalData.map((entry) => entry.price),
-        borderColor: "rgba(75,192,192,1)",
+        borderColor: 'rgba(75,192,192,1)',
         fill: false,
       },
     ],
@@ -93,11 +94,11 @@ const StockPage: React.FC = () => {
   return (
     <Container maxWidth="lg">
       {loading ? (
-        <Typography variant="h5">Loading...</Typography>
+        <CircularProgress />
       ) : stockData ? (
         <Box sx={{ marginTop: 3 }}>
           <Typography variant="h4" gutterBottom>
-            Stock: {symbol ? symbol.toUpperCase() : "N/A"}
+            Stock: {symbol ? symbol.toUpperCase() : 'N/A'}
           </Typography>
 
           {/* Financial Cards */}
@@ -106,7 +107,7 @@ const StockPage: React.FC = () => {
               <Card>
                 <CardContent>
                   <Typography variant="h6">Current Price</Typography>
-                  <Typography variant="h5">${stockData.c || "N/A"}</Typography>
+                  <Typography variant="h5">${stockData.c || 'N/A'}</Typography>
                 </CardContent>
               </Card>
             </Grid>
@@ -115,7 +116,7 @@ const StockPage: React.FC = () => {
               <Card>
                 <CardContent>
                   <Typography variant="h6">P/E Ratio</Typography>
-                  <Typography variant="h5">{stockData.pe || "N/A"}</Typography>
+                  <Typography variant="h5">{stockData.pe || 'N/A'}</Typography>
                 </CardContent>
               </Card>
             </Grid>
@@ -124,7 +125,7 @@ const StockPage: React.FC = () => {
               <Card>
                 <CardContent>
                   <Typography variant="h6">Market Cap</Typography>
-                  <Typography variant="h5">${stockData.marketCap || "N/A"}</Typography>
+                  <Typography variant="h5">${stockData.marketCap || 'N/A'}</Typography>
                 </CardContent>
               </Card>
             </Grid>
@@ -133,7 +134,7 @@ const StockPage: React.FC = () => {
               <Card>
                 <CardContent>
                   <Typography variant="h6">Dividend Yield</Typography>
-                  <Typography variant="h5">{stockData.dividendYield || "N/A"}</Typography>
+                  <Typography variant="h5">{stockData.dividendYield || 'N/A'}</Typography>
                 </CardContent>
               </Card>
             </Grid>
@@ -144,15 +145,17 @@ const StockPage: React.FC = () => {
             <Typography variant="h5" gutterBottom>
               Stock Price History (Last Month)
             </Typography>
-            <Line data={chartData} options={{ responsive: true }} />
+            <Line ref={chartRef} data={chartData} options={{ responsive: true }} />
           </Box>
 
-          {/* Generate Stock Pitch */}
+          {/* Stock Pitch Section */}
           <Box sx={{ marginTop: 3 }}>
-            <Typography variant="h5" gutterBottom>
-              Generate Stock Pitch
-            </Typography>
-            <StockPitch stockData={stockData} historicalData={historicalData} news={news} />
+            <StockPitch
+              stockData={stockData}
+              historicalData={historicalData}
+              news={news}
+              chartRef={chartRef} // Pass chartRef to StockPitch
+            />
           </Box>
         </Box>
       ) : (

@@ -1,46 +1,67 @@
-# Getting Started with Create React App
+# Stock Dashboard App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A web application that allows users to view stock data, including key metrics (like P/E ratio, market cap, dividend yield) and historical stock prices, visualized using interactive graphs.
 
-## Available Scripts
+## Table of Contents
 
-In the project directory, you can run:
+- [Project Description](#project-description)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Usage](#usage)
+- [Future Improvements](#future-improvements)
+- [Deployed Project](#deployed-project)
 
-### `npm start`
+## Project Description
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+The **Stock Dashboard App** allows users to view detailed information about stocks, including their current price, P/E ratio, market cap, and dividend yield. Historical stock price data is displayed on an interactive line chart, allowing users to track stock performance over the past year. The application uses data from various APIs and external sources, including Yahoo Finance and Finnhub.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Features
 
-### `npm test`
+- **Stock Metrics**: Displays key financial metrics such as the P/E ratio, market cap, and dividend yield for selected companies.
+- **Historical Data**: Displays historical stock prices over the past year in a line chart.
+- **Responsive UI**: The UI adapts to various screen sizes, offering a seamless experience on both desktop and mobile devices.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Tech Stack
 
-### `npm run build`
+- **Frontend**: React, Material UI, Chart.js
+- **Backend**: Node.js (for API calls if needed)
+- **APIs**: Yahoo Finance, Finnhub (for stock metrics), CSV data (for historical stock prices)
+- **Deployment**: Vercel (for hosting)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Usage
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Once the app is running locally, you can interact with it by searching for stock symbols (e.g., `AAPL` for Apple or `GOOG` for Google). The app will display the following information:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- **Stock Metrics**: Current price, P/E ratio, market cap, dividend yield.
+- **Historical Data**: A graph showing the stock price history for the past year.
 
-### `npm run eject`
+### Example:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+- **Symbol**: AAPL (Apple Inc.)
+- **Displayed Information**:
+  - Current Price: $145.30
+  - P/E Ratio: 28.56
+  - Market Cap: $2.42T
+  - Dividend Yield: 0.56%
+  - Historical Data: Line chart of the stock's price for the past 365 days.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Future Improvements
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### UI Enhancements:
+1. **Graph Customization**: Add options to customize the graphs (e.g., changing the time range, graph types such as bar or candlestick).
+2. **Dark Mode**: Implement a dark mode theme for the application.
+3. **User Profiles**: Allow users to save their favorite stocks and view them on a personalized dashboard.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### API Enhancements:
+1. **Multiple APIs for Stock Data**: Integrate additional APIs for data sources to provide more accurate or diverse financial metrics.
+2. **Real-time Stock Data**: Implement real-time stock updates via WebSockets or other means for more up-to-date data.
+3. **Predictive Analytics**: Implement basic predictive analytics or trends based on past stock performance, using machine learning or statistical methods.
 
-## Learn More
+### Features:
+1. **News Integration**: Add a news section for each stock showing the latest news headlines.
+2. **Alerts and Notifications**: Allow users to set up alerts for specific stock price changes or milestones.
+3. **Search History**: Add a history of searched stocks for quick access.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Deployed Project
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+You can view the live version of the Stock Dashboard App here: [sigmaftw.vercel.app](https://sigmaftw.vercel.app)

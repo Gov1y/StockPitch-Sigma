@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { Button, Box } from '@mui/material'; // Importing Material-UI components
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 
@@ -6,10 +7,25 @@ interface StockPitchProps {
   stockData: any;
   historicalData: any[];
   news: any[];
+  chartRef: React.RefObject<any>; // Accept chartRef as a prop
 }
 
-const StockPitch: React.FC<StockPitchProps> = ({ stockData, historicalData, news }) => {
+const StockPitch: React.FC<StockPitchProps> = ({ stockData, historicalData, news, chartRef }) => {
+  const [chartReady, setChartReady] = useState<boolean>(false);
+
+  // Check if chart is ready (to avoid undefined errors)
+  useEffect(() => {
+    if (chartRef.current && chartRef.current.chartInstance) {
+      setChartReady(true); // Set chart as ready once it's initialized
+    }
+  }, [chartRef]);
+
   const generatePDF = () => {
+    if (!chartReady) {
+      alert('Chart is not ready yet');
+      return;
+    }
+
     const doc = new jsPDF();
 
     // Add title
@@ -23,9 +39,15 @@ const StockPitch: React.FC<StockPitchProps> = ({ stockData, historicalData, news
     doc.text(`P/E Ratio: ${stockData.pe}`, 14, 50);
     doc.text(`Dividend Yield: ${stockData.dividendYield}%`, 14, 60);
 
+    // Add the chart as an image
+    if (chartRef.current) {
+      const chartImage = chartRef.current.chartInstance.toBase64Image();
+      doc.addImage(chartImage, 'PNG', 14, 70, 180, 90); // Add image to PDF
+    }
+
     // Add historical data table
     doc.autoTable({
-      startY: 70,
+      startY: 160,
       head: [['Date', 'Closing Price']],
       body: historicalData.map((entry) => [entry.date, `$${entry.price}`]),
     });
@@ -41,9 +63,16 @@ const StockPitch: React.FC<StockPitchProps> = ({ stockData, historicalData, news
   };
 
   return (
-    <div>
-      <button onClick={generatePDF}>Download Stock Pitch PDF</button>
-    </div>
+    <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 3 }}>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={generatePDF}
+        sx={{ padding: '10px 20px', fontSize: '16px' }} // Styling the button
+      >
+        Download Stock Pitch PDF
+      </Button>
+    </Box>
   );
 };
 
